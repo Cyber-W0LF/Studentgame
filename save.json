@@ -1,0 +1,25 @@
+{
+    "nick": "sdf",
+    "age": 20,
+    "money": 5101,
+    "wallet": {
+        "money": 5101
+    },
+    "works": [
+        {
+            "name": "касcир",
+            "salary": 797,
+            "hours": 7
+        },
+        {
+            "name": "рекламщик",
+            "salary": 659,
+            "hours": 3
+        },
+        {
+            "name": "дворник",
+            "salary": 296,
+            "hours": 4
+        }
+    ]
+}
