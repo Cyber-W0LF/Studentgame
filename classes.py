@@ -1,4 +1,5 @@
-﻿import random
+﻿import json
+import random
 
 
 class Wallet:
@@ -7,6 +8,7 @@ class Wallet:
 
     def addMoney(self, money):
         self.money += money
+        print(money, '₽ заработано')
 
     def __json__(self):
         return {'money': self.money}
@@ -26,6 +28,7 @@ class Work:
     def __json__(self):
         return {'name': self.name, 'salary': self.salary, 'hours': self.hours}
 
+
 class Vacations:
     cashier = Work('касcир', (random.randint(700, 1500)), 7)
     loader = Work('грузчик', random.randint(500, 900), 6)
@@ -40,45 +43,52 @@ class Vacations:
     works = [cashier, loader, street_cleaner, volunteer, cleaner, consultant, courier, advertiser, washer, waiter]
 
     @classmethod
-    def all(cls ):
+    def all(cls):
         for work in cls.works:
             if work is cls.washer:
                 print(f'{work.name}'
-                f'\n{work.salary * work.hours}₽'
-                f'\n{work.hours} машин')
-            else: print(work)
-
+                      f'\n{work.salary * work.hours}₽'
+                      f'\n{work.hours} машин')
+            else:
+                print(work)
 
 
 class Student:
-    def __init__(self):  # born student
-        self.nick = self.__SetNick()
+
+    def SetNick(self):
+        return input('Имя: ')
+
+    def __init__(self, nick=''):  # born student
+        self.nick = nick
         self.age = random.randint(18, 21)
         self.money = random.randint(4000, 6000)
         self.wallet = Wallet(self.money)
         self.works = random.sample(Vacations.works, k=3)
+        self.days = 1
 
     def toWork(self, index):
         self.wallet.addMoney(self.works[index].salary)
         print(self.money, 'на счету:'
                           '\n заработано:', self.works[index].salary)
 
-    def __SetNick(self):
-        return input('Имя: ')
-
     def __str__(self) -> str:
         _works = ''
         for work in self.works:
-            if  work is Vacations.washer:
+            if work is Vacations.washer:
                 _works += (f'{work.name}\n'
-                   f'{work.salary * work.hours} за {work.hours} машин\n')
+                           f'{work.salary * work.hours} за {work.hours} машин\n')
             else:
                 _works += (f'{work.name}\n'
-                   f'{work.salary * work.hours} за {work.hours} ч\n')
+                           f'{work.salary * work.hours} за {work.hours} ч\n')
 
-        return (f'возраст:{self.age}\n'
-                f'деньги:{self.wallet.money}₽'
+        return (f'имя: {self.nick}\n'
+                f'возраст: {self.age}\n'
+                f'деньги: {self.wallet.money}₽\n'
+                f'дни:{self.days}\n'
                 f'\n{_works}')
+
+    def updateVacs(self):
+        self.works = random.sample(Vacations.works, k=3)
 
     def __json__(self):
         return {
@@ -86,5 +96,28 @@ class Student:
             'age': self.age,
             'money': self.money,
             'wallet': self.wallet.__json__(),
-            'works': [work.__json__() for work in self.works]
+            'works': [work.__json__() for work in self.works],
+            'days': self.days
         }
+
+
+class Json:
+    @staticmethod
+    def toJson(student: Student):
+        with open("save.json", "w", encoding="utf-8") as file:
+            json.dump(student, file, default=lambda x: x.__json__(), indent=4, ensure_ascii=False)
+
+    @staticmethod
+    def fromJson() -> Student:
+        json_: str = ''
+        with open("save.json", 'r', encoding='utf-8') as file:
+            json_ = file.read()
+        student_dict = json.loads(json_)
+        student = Student()
+        student.nick = student_dict['nick']
+        student.age = student_dict['age']
+        student.money = student_dict['money']
+        student.wallet.money = student_dict['wallet']['money']
+        student.works = [Work(**work_dict) for work_dict in student_dict['works']]
+        student.days = student_dict['days']
+        return student

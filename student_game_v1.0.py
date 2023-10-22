@@ -1,26 +1,40 @@
-﻿import json
+﻿
 import sys
 import msvcrt
 import keyboard
-from classes import Student, Wallet, Vacations, Work
+from classes import Student, Wallet, Vacations, Work, Json
 
+print('выберете действие: \n'
+      '1 - новая игра\n'
+      '2 - продолжить\n'
+      '3 - выход\n'
+      )
+player = Student()
+match(int(input('выбор:'))):
+    case 1:
+        player = Student()
+        player.nick = player.SetNick()
+        print('ваш персонаж\n',player)
+        Json.toJson(player)
 
-# student = Student()
-# print(student)
-#
-# with open("save.json", "w", encoding="utf-8" ) as file:
-#     json.dump(student, file,default=lambda x: x.__json__(), indent=4, ensure_ascii=False)
+    case 2:
+        player = Json.fromJson()
+        player.days +=1
+        print('ваш персонаж\n', player)
 
-json_: str = ''
-with open("save.json", 'r',  encoding='utf-8') as file:
-    json_ = file.read()
-student_dict = json.loads(json_)
-student = Student()
-student.nick = student_dict['nick']
-student.age = student_dict['age']
-student.money = student_dict['money']
-student.wallet.money = student_dict['wallet']['money']
-student.works = [Work(**work_dict) for work_dict in student_dict['works']]
-print(student)
+    case 3:
+        sys.exit(0)
 
+# цукенг
+while True:
+    V = int(input(f'\nДень:{player.days}'
+                  '\nвыбор вакансии:'))
+    player.wallet.addMoney(player.works[V -1].salary * player.works[V -1].hours)
+    print(f'баланс:{player.wallet.money}₽')
+    player.days += 1
+    player.updateVacs()
+    print(player.works[0])
+    print(player.works[1])
+    print(player.works[2])
+    Json.toJson(player)
 

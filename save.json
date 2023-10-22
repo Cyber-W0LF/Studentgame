@@ -1,25 +1,26 @@
 {
-    "nick": "sdf",
-    "age": 20,
-    "money": 5101,
+    "nick": "йцукенгшщ",
+    "age": 18,
+    "money": 5431,
     "wallet": {
-        "money": 5101
+        "money": 5431
     },
     "works": [
         {
-            "name": "касcир",
-            "salary": 797,
-            "hours": 7
-        },
-        {
             "name": "рекламщик",
-            "salary": 659,
+            "salary": 686,
             "hours": 3
         },
         {
-            "name": "дворник",
-            "salary": 296,
-            "hours": 4
+            "name": "касcир",
+            "salary": 1411,
+            "hours": 7
+        },
+        {
+            "name": "волонтер",
+            "salary": 1072,
+            "hours": 7
         }
-    ]
+    ],
+    "days": 1
 }
